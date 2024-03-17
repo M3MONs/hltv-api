@@ -24,5 +24,5 @@ class HltvTop30Spider(scrapy.Spider):
                 "players": players,
             }
 
-            print(data)
+            # print(data)
             yield data
