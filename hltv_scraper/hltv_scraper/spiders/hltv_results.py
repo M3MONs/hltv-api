@@ -22,16 +22,18 @@ class HltvResultsSpider(scrapy.Spider):
         return match
 
     def parse_results(self, sublists):
-        all_results = []
+        all_results = {}
         for sublist in sublists:
+            date = sublist.css(".standard-headline::text").get()
             results = sublist.css("div.result")
+            matches = []
             for result in results:
-                all_results.append(self.parse_match(result))
+                matches.append(self.parse_match(result))
+            all_results[date] = matches
         return all_results
 
     def parse(self, response):
         # TODO: check if offset was given
-        sublists = response.css("div.results-sublist")
+        sublists = response.css("div.allres .results-sublist")
         results = self.parse_results(sublists)
-        # print(results)
-        yield {"results": results}
+        yield results
