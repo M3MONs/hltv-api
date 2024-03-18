@@ -8,32 +8,32 @@ class HltvResultsSpider(scrapy.Spider):
     base_api_url = "https://www.hltv.org/results?offset={}"
 
     def parse_team(self, result, number):
-        name = result.css(f"div.team{number} .team::text").get()
-        rounds = result.css(f"td.result-score span:nth-child({number})::text").get()
-        logo = result.css(f"div.team{number} img::attr(src)").get()
-        return {"name": name, "rounds": rounds, "logo": logo}
+        return {
+            "name": result.css(f"div.team{number} .team::text").get(),
+            "rounds": result.css(
+                f"td.result-score span:nth-child({number})::text"
+            ).get(),
+            "logo": result.css(f"div.team{number} img::attr(src)").get(),
+        }
 
     def parse_match(self, result):
-        map = result.css("div.map-text::text").get()
-        event = result.css("span.event-name::text").get()
-        first_team = self.parse_team(result, 1)
-        second_team = self.parse_team(result, 2)
-        match = {"map": map, "event": event, "team1": first_team, "team2": second_team}
-        return match
+        return {
+            "map": result.css("div.map-text::text").get(),
+            "event": result.css("span.event-name::text").get(),
+            "team1": self.parse_team(result, 1),
+            "team2": self.parse_team(result, 2),
+        }
 
     def parse_results(self, sublists):
         all_results = {}
         for sublist in sublists:
             date = sublist.css(".standard-headline::text").get()
-            results = sublist.css("div.result")
-            matches = []
-            for result in results:
-                matches.append(self.parse_match(result))
-            all_results[date] = matches
+            all_results[date] = [
+                self.parse_match(result) for result in sublist.css("div.result")
+            ]
         return all_results
 
     def parse(self, response):
         # TODO: check if offset was given
         sublists = response.css("div.allres .results-sublist")
-        results = self.parse_results(sublists)
-        yield results
+        yield self.parse_results(sublists)
