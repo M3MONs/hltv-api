@@ -6,6 +6,16 @@ def parse_team(result, number):
     }
 
 
+def parse_team_ranking(team):
+    return {
+        "position": team.css("span.position::text").get(),
+        "name": team.css(".name::text").get(),
+        "logo": team.css("span.team-logo img::attr(src)").get(),
+        "points": team.css("span.points::text").get(),
+        "players": team.css("div.playersLine .rankingNicknames span::text").getall(),
+    }
+
+
 def parse_match(result):
     return {
         "map": result.css("div.map-text::text").get(),
