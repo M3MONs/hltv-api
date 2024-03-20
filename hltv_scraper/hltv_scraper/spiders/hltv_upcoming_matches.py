@@ -20,6 +20,7 @@ class HltvUpcomingMatchesSpider(scrapy.Spider):
             return {
                 "hour": match.css("div.matchTime::text").get(),
                 "meta": match.css("div.matchMeta::text").get(),
+                "event": match.css("div.matchEventName::text").get(),
                 "team1": self.parse_team(match, 1),
                 "team2": self.parse_team(match, 2),
             }
