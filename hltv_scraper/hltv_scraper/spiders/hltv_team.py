@@ -16,3 +16,16 @@ class HltvTeamSpider(scrapy.Spider):
 
     def parse(self, response):
         profile_link = self.get_profile_link(response)
+        if profile_link:
+            yield scrapy.Request(
+                url=f"https://www.hltv.org{profile_link}", callback=self.parse_profile
+            )
+
+    def parse_profile(self, response):
+        return {
+            "name": response.css(".profile-team-name::text").get(),
+            "ranking": response.css("span.right a::text").get(),
+            "logo": response.css("img.teamlogo::attr(src)").get(),
+            "country": response.css("div.team-country::text").get(),
+            "country_img": f'https://www.hltv.org{response.css("div.team-country img::attr(src)").get()}',
+        }
