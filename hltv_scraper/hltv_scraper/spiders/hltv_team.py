@@ -11,5 +11,8 @@ class HltvTeamSpider(scrapy.Spider):
         self.team_name = team_name.replace(" ", "-")
         super().__init__(**kwargs)
 
+    def get_profile_link(self, response):
+        return response.css(f'a[href$="/{self.team_name.lower()}"]').attrib["href"]
+
     def parse(self, response):
-        profile_link = response.css(f'a[href$="/{self.team_name.lower()}"]').get()
+        profile_link = self.get_profile_link(response)
