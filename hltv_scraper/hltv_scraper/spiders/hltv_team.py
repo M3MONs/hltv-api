@@ -14,6 +14,18 @@ class HltvTeamSpider(scrapy.Spider):
     def get_profile_link(self, response):
         return response.css(f'a[href$="/{self.team_name.lower()}"]').attrib["href"]
 
+    def parse_squad(self, response):
+        players_container = response.css(".bodyshot-team.g-grid a.col-custom")
+
+        return [
+            {
+                "name": player.css(".playerFlagName span.text-ellipsis::text").get(),
+                "img": player.css("img.bodyshot-team-img::attr(src)").get(),
+                "nation": f"https://www.hltv.org{player.css('img.flag::attr(src)').get()}",
+            }
+            for player in players_container
+        ]
+
     def parse(self, response):
         profile_link = self.get_profile_link(response)
         if profile_link:
@@ -28,4 +40,5 @@ class HltvTeamSpider(scrapy.Spider):
             "logo": response.css("img.teamlogo::attr(src)").get(),
             "country": response.css("div.team-country::text").get(),
             "country_img": f'https://www.hltv.org{response.css("div.team-country img::attr(src)").get()}',
+            "squad": self.parse_squad(response),
         }
