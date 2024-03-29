@@ -99,5 +99,19 @@ def upcoming_matches():
     return jsonify(data)
 
 
+@app.route("/team/<name>", methods=["GET"])
+def team(name: str):
+    spider_name = "hltv_team"
+    json_name = name
+
+    if should_run_spider(json_name, 24):
+        run_team_spider(spider_name, json_name, name)
+
+    with open(f"./hltv_scraper/{json_name}.json", "r") as file:
+        data = json.load(file)
+
+    return jsonify(data)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
