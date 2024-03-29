@@ -4,11 +4,10 @@ import os, time, json, subprocess
 app = Flask(__name__)
 
 
-def should_run_spider(json_name: str):
+def should_run_spider(json_name: str, hours: int = 1):
     localization = f"./hltv_scraper/{json_name}.json"
-    if (
-        os.path.exists(localization)
-        and time.time() - os.path.getmtime(localization) < 3600
+    if os.path.exists(localization) and time.time() - os.path.getmtime(localization) < (
+        3600 * hours
     ):
         return False
     return True
