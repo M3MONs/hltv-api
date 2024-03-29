@@ -26,6 +26,23 @@ def run_spider(spider_name: str, json_name: str):
     process.wait()
 
 
+def run_team_spider(spider_name: str, json_name: str, name: str):
+    clear_old_data(json_name)
+    process = subprocess.Popen(
+        [
+            "scrapy",
+            "crawl",
+            spider_name,
+            "-o",
+            f"{json_name}.json",
+            "-a",
+            f"team_name={name}",
+        ],
+        cwd="./hltv_scraper",
+    )
+    process.wait()
+
+
 @app.route("/results", methods=["GET"])
 def results():
     spider_name = "hltv_results"
