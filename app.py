@@ -55,5 +55,19 @@ def top30():
     return jsonify(data)
 
 
+@app.route("/upcoming_matches", methods=["GET"])
+def upcoming_matches():
+    spider_name = "hltv_upcoming_matches"
+    json_name = "upcoming_matches"
+
+    if should_run_spider(json_name):
+        run_spider(spider_name, json_name)
+
+    with open(f"./hltv_scraper/{json_name}.json", "r") as file:
+        data = json.load(file)
+
+    return jsonify(data)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
