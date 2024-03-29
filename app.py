@@ -16,7 +16,12 @@ def should_run_spider(json_name: str):
     return True
 
 
+def clear_old_data(json_name: str):
+    open(f"./hltv_scraper/{json_name}.json", "w").close()
+
+
 def run_spider(spider_name: str, json_name: str):
+    clear_old_data(json_name)
     process = subprocess.Popen(
         ["scrapy", "crawl", spider_name, "-o", f"{json_name}.json"],
         cwd="./hltv_scraper",
