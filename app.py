@@ -6,8 +6,6 @@ app = Flask(__name__)
 
 def should_run_spider(json_name: str):
     localization = f"./hltv_scraper/{json_name}.json"
-    if os.path.exists(localization) and os.path.getsize(localization) > 0:
-        return False
     if (
         os.path.exists(localization)
         and time.time() - os.path.getmtime(localization) < 3600
