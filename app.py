@@ -35,7 +35,7 @@ def results():
     with open("./hltv_scraper/results.json", "r") as file:
         data = json.load(file)
 
-    return jsonify({"data": data})
+    return jsonify(data)
 
 
 if __name__ == "__main__":
