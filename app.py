@@ -35,7 +35,7 @@ def results():
     if should_run_spider(json_name):
         run_spider(spider_name, json_name)
 
-    with open("./hltv_scraper/results.json", "r") as file:
+    with open(f"./hltv_scraper/{json_name}.json", "r") as file:
         data = json.load(file)
 
     return jsonify(data)
