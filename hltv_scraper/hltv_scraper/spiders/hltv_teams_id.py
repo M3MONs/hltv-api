@@ -8,12 +8,12 @@ class HltvTeamsIdSpider(scrapy.Spider):
 
     def __init__(self, team: str, **kwargs: Any):
         self.start_urls = [f"https://www.hltv.org/search?query={team}"]
-        self.team_name = team.replace(" ", "-")
+        self.team_name = team
         super().__init__(**kwargs)
 
     def get_profile_link(self, response):
         return response.css(
-            f"a[href^='/team/'][href$='/{self.team_name}']::attr(href)"
+            f"a[href^='/team/'][href$='/{self.team_name.replace('+', '-')}']::attr(href)"
         ).get()
 
     def save_to_json(self, data):
