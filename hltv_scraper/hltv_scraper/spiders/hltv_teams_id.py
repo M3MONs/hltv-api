@@ -6,9 +6,9 @@ class HltvTeamsIdSpider(scrapy.Spider):
     name = "hltv_teams_id"
     allowed_domains = ["www.hltv.org"]
 
-    def __init__(self, team_name="", **kwargs: Any):
-        self.start_urls = [f"https://www.hltv.org/search?query={team_name}"]
-        self.team_name = team_name.replace(" ", "-")
+    def __init__(self, team: str, **kwargs: Any):
+        self.start_urls = [f"https://www.hltv.org/search?query={team}"]
+        self.team_name = team.replace(" ", "-")
         super().__init__(**kwargs)
 
     def get_profile_link(self, response):
