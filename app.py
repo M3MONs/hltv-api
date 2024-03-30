@@ -1,7 +1,11 @@
 from flask import Flask, jsonify
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import os, time, json, subprocess
 
 app = Flask(__name__)
+
+limiter = Limiter(app, default_limits=["1 per second"])
 
 
 def should_run_spider(json_name: str, hours: int = 1):
@@ -100,6 +104,7 @@ def upcoming_matches():
 
 
 @app.route("/team/<name>", methods=["GET"])
+@limiter.limit("1 per second")
 def team(name: str):
     spider_name = "hltv_team"
     json_name = name
