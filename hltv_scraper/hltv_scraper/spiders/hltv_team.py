@@ -34,7 +34,7 @@ class HltvTeamSpider(scrapy.Spider):
             )
 
     def parse_profile(self, response):
-        return {
+        team_data = {
             "name": response.css(".profile-team-name::text").get(),
             "ranking": response.css("span.right a::text").get(),
             "logo": response.css("img.teamlogo::attr(src)").get(),
@@ -42,3 +42,5 @@ class HltvTeamSpider(scrapy.Spider):
             "country_img": f'https://www.hltv.org{response.css("div.team-country img::attr(src)").get()}',
             "squad": self.parse_squad(response),
         }
+        if team_data["name"]:
+            return team_data
