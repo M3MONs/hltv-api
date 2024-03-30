@@ -6,13 +6,9 @@ class HltvTeamSpider(scrapy.Spider):
     name = "hltv_team"
     allowed_domains = ["www.hltv.org"]
 
-    def __init__(self, team_name="ence", **kwargs: Any):
-        self.start_urls = [f"https://www.hltv.org/search?query={team_name}"]
-        self.team_name = team_name.replace(" ", "-")
+    def __init__(self, team: str, **kwargs: Any):
+        self.start_urls = [f"https://www.hltv.org{team}"]
         super().__init__(**kwargs)
-
-    def get_profile_link(self, response):
-        return response.css(f'a[href$="/{self.team_name.lower()}"]').attrib["href"]
 
     def parse_squad(self, response):
         players_container = response.css(".bodyshot-team.g-grid a.col-custom")
@@ -27,11 +23,7 @@ class HltvTeamSpider(scrapy.Spider):
         ]
 
     def parse(self, response):
-        profile_link = self.get_profile_link(response)
-        if profile_link:
-            yield scrapy.Request(
-                url=f"https://www.hltv.org{profile_link}", callback=self.parse_profile
-            )
+        yield self.parse_profile(response)
 
     def parse_profile(self, response):
         team_data = {
