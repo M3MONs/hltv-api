@@ -5,6 +5,8 @@ from utils import (
     run_spider,
     run_team_profile_spider,
     run_team_spider,
+    get_profile_link,
+    is_team_profile_link,
 )
 import os, json
 
@@ -67,27 +69,6 @@ def upcoming_matches():
         data = json.load(file)
 
     return jsonify(data)
-
-
-def is_team_profile_link(team_name: str):
-    profiles_json = "./hltv_scraper/teams_profile.json"
-
-    if not os.path.exists(profiles_json):
-        return False
-
-    with open(profiles_json) as file:
-        profiles = json.load(file)
-        if team_name in profiles:
-            return True
-
-    return False
-
-
-def get_profile_link(team_name: str):
-    profiles_json = "./hltv_scraper/teams_profile.json"
-    with open(profiles_json) as file:
-        profiles = json.load(file)
-        return profiles[team_name]
 
 
 @app.route("/team/<name>", methods=["GET"])

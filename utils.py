@@ -1,4 +1,4 @@
-import os, time, subprocess
+import os, time, subprocess, json
 
 
 def should_run_spider(json_name: str, hours: int = 1):
@@ -52,3 +52,24 @@ def run_team_spider(spider_name: str, name: str, profile: str):
         cwd="./hltv_scraper",
     )
     process.wait()
+
+
+def get_profile_link(team_name: str):
+    profiles_json = "./hltv_scraper/teams_profile.json"
+    with open(profiles_json) as file:
+        profiles = json.load(file)
+        return profiles[team_name]
+
+
+def is_team_profile_link(team_name: str):
+    profiles_json = "./hltv_scraper/teams_profile.json"
+
+    if not os.path.exists(profiles_json):
+        return False
+
+    with open(profiles_json) as file:
+        profiles = json.load(file)
+        if team_name in profiles:
+            return True
+
+    return False
