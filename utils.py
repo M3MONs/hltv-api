@@ -38,7 +38,7 @@ def run_team_profile_spider(spider_name: str, name: str):
 
 
 def run_team_spider(spider_name: str, name: str, profile: str):
-
+    clear_old_data(name)
     process = subprocess.Popen(
         [
             "scrapy",
