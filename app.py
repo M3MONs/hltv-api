@@ -8,7 +8,7 @@ from utils import (
     get_profile_link,
     is_team_profile_link,
 )
-import os, json
+import json
 
 app = Flask(__name__)
 
