@@ -3,8 +3,6 @@ from flask_limiter import Limiter
 from utils import (
     should_run_spider,
     run_spider,
-    run_team_profile_spider,
-    run_team_spider,
     get_profile_link,
     is_team_profile_link,
 )
@@ -21,7 +19,7 @@ def results():
     json_name = "results"
 
     if should_run_spider(json_name):
-        run_spider(spider_name, json_name)
+        run_spider(spider_name, json_name, f"-o {json_name}.json")
 
     with open(f"./hltv_scraper/{json_name}.json", "r") as file:
         data = json.load(file)
@@ -35,7 +33,7 @@ def big_results():
     json_name = "big_results"
 
     if should_run_spider(json_name):
-        run_spider(spider_name, json_name)
+        run_spider(spider_name, json_name, f"-o {json_name}.json")
 
     with open(f"./hltv_scraper/{json_name}.json", "r") as file:
         data = json.load(file)
@@ -49,7 +47,7 @@ def top30():
     json_name = "top_teams"
 
     if should_run_spider(json_name):
-        run_spider(spider_name, json_name)
+        run_spider(spider_name, json_name, f"-o {json_name}.json")
 
     with open(f"./hltv_scraper/{json_name}.json", "r") as file:
         data = json.load(file)
@@ -63,7 +61,7 @@ def upcoming_matches():
     json_name = "upcoming_matches"
 
     if should_run_spider(json_name):
-        run_spider(spider_name, json_name)
+        run_spider(spider_name, json_name, f"-o {json_name}.json")
 
     with open(f"./hltv_scraper/{json_name}.json", "r") as file:
         data = json.load(file)
@@ -74,20 +72,22 @@ def upcoming_matches():
 @app.route("/team/<name>", methods=["GET"])
 @limiter.limit("1 per second")
 def team(name: str):
+    name = name.lower()
     spider_name = "hltv_teams_id"
     spider_name2 = "hltv_team"
 
-    if not is_team_profile_link(name.lower()):
-        run_team_profile_spider(spider_name, name)
+    if not is_team_profile_link(name):
+        run_spider(spider_name, name, f"-a team={name}")
 
-    if not is_team_profile_link(name.lower()):
+    if not is_team_profile_link(name):
         return "Team not found!"
 
-    profile_link = get_profile_link(name.lower())
-    if should_run_spider(name.lower(), 24):
-        run_team_spider(spider_name2, name.lower(), profile_link)
+    profile_link = get_profile_link(name)
 
-    with open(f"./hltv_scraper/{name.lower()}.json", "r") as file:
+    if should_run_spider(name, 24):
+        run_spider(spider_name2, name, f"-a team={profile_link} -o {name}.json")
+
+    with open(f"./hltv_scraper/{name}.json", "r") as file:
         data = json.load(file)
 
     return jsonify(data)
