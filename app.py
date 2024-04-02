@@ -93,5 +93,11 @@ def team(name: str):
     return jsonify(data)
 
 
+@app.route("/player/<name>", methods=["GET"])
+@limiter.limit("1 per second")
+def player(name: str):
+    pass
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
