@@ -5,6 +5,7 @@ from utils import (
     run_spider,
     get_profile_link,
     is_team_profile_link,
+    is_player_profiles,
 )
 import json
 
@@ -96,7 +97,13 @@ def team(name: str):
 @app.route("/player/<name>", methods=["GET"])
 @limiter.limit("1 per second")
 def player(name: str):
-    pass
+    name = name.lower()
+    spider_name = "hltv_players_search"
+
+    if not is_player_profiles(name):
+        run_spider(spider_name, name, f"-a player={name}")
+
+    return "In progress..."
 
 
 if __name__ == "__main__":
