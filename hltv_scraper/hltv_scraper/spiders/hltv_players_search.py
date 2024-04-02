@@ -38,8 +38,8 @@ class HltvPlayersSearchSpider(scrapy.Spider):
 
         existing_data.update(data)
 
-        with open(file_path, "w") as json_file:
-            json.dump(existing_data, json_file, indent=4)
+        with open(file_path, "w", encoding="utf-8") as json_file:
+            json.dump(existing_data, json_file, indent=4, ensure_ascii=False)
 
     def parse(self, response):
         profiles = self.get_profiles_link(response)
