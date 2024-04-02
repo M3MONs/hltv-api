@@ -1,6 +1,16 @@
 # hltv-api
 An unofficial python flask api for popular CS2 website hltv.org.
 
+# Instalation
+**Prerequisites:** Python 3.x (check with `python --version` or `python3 --version`)
+
+```bash
+git clone https://github.com/M3MONs/hltv-api.git
+cd hltv-api
+pip install -r requirements.txt
+python app.py
+```
+
 # Examples 
 ## Top teams
 ```python
