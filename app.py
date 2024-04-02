@@ -6,6 +6,7 @@ from utils import (
     get_profile_link,
     is_team_profile_link,
     is_player_profiles,
+    get_players_profile,
 )
 import json
 
@@ -103,7 +104,12 @@ def player(name: str):
     if not is_player_profiles(name):
         run_spider(spider_name, name, f"-a player={name}")
 
-    return "In progress..."
+    if not is_player_profiles(name):
+        return "Player not found!"
+
+    profiles = get_players_profile(name)
+
+    return jsonify(profiles)
 
 
 if __name__ == "__main__":
