@@ -32,6 +32,14 @@ def get_profile_link(team_name: str):
         return profiles[team_name]
 
 
+def get_players_profile(player: str):
+    profiles_json = "./hltv_scraper/players_profiles.json"
+    with open(profiles_json) as file:
+        profiles = json.load(file)
+        print(profiles)
+        return profiles[player]
+
+
 def is_team_profile_link(team_name: str):
     profiles_json = "./hltv_scraper/teams_profile.json"
 
@@ -47,7 +55,7 @@ def is_team_profile_link(team_name: str):
 
 
 def is_player_profiles(player_name: str):
-    profiles_json = "./hltv_scraper/teams_profile.json"
+    profiles_json = "./hltv_scraper/players_profiles.json"
 
     if not os.path.exists(profiles_json):
         return False
