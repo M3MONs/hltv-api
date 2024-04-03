@@ -3,6 +3,7 @@ from flask_limiter import Limiter
 from utils import (
     should_run_spider,
     run_spider,
+    run_spider_and_get_data,
     get_profile_data,
     load_json_data,
     is_profile_link,
@@ -18,10 +19,7 @@ def results():
     spider_name = "hltv_results"
     json_name = "results"
 
-    if should_run_spider(json_name):
-        run_spider(spider_name, json_name, f"-o {json_name}.json")
-
-    data = load_json_data(json_name)
+    data = run_spider_and_get_data(spider_name, json_name, f"-o {json_name}.json")
 
     return jsonify(data)
 
@@ -31,10 +29,7 @@ def big_results():
     spider_name = "hltv_big_results"
     json_name = "big_results"
 
-    if should_run_spider(json_name):
-        run_spider(spider_name, json_name, f"-o {json_name}.json")
-
-    data = load_json_data(json_name)
+    data = run_spider_and_get_data(spider_name, json_name, f"-o {json_name}.json")
 
     return jsonify(data)
 
@@ -44,10 +39,7 @@ def top30():
     spider_name = "hltv_top30"
     json_name = "top_teams"
 
-    if should_run_spider(json_name):
-        run_spider(spider_name, json_name, f"-o {json_name}.json")
-
-    data = load_json_data(json_name)
+    data = run_spider_and_get_data(spider_name, json_name, f"-o {json_name}.json")
 
     return jsonify(data)
 
@@ -57,10 +49,7 @@ def upcoming_matches():
     spider_name = "hltv_upcoming_matches"
     json_name = "upcoming_matches"
 
-    if should_run_spider(json_name):
-        run_spider(spider_name, json_name, f"-o {json_name}.json")
-
-    data = load_json_data(json_name)
+    data = run_spider_and_get_data(spider_name, json_name, f"-o {json_name}.json")
 
     return jsonify(data)
 
