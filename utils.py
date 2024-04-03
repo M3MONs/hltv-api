@@ -15,6 +15,20 @@ def load_json_data(filename: str):
         return json.load(file)
 
 
+def is_profile_link(filename: str, profile: str):
+    json_file = f"./hltv_scraper/{filename}.json"
+
+    if not os.path.exists(json_file):
+        return False
+
+    with open(json_file) as file:
+        profiles = json.load(file)
+        if profile in profiles:
+            return True
+
+    return False
+
+
 def clear_old_data(json_name: str):
     open(f"./hltv_scraper/{json_name}.json", "w").close()
 
@@ -42,31 +56,3 @@ def get_players_profile(player: str):
     with open(profiles_json) as file:
         profiles = json.load(file)
         return profiles[player]
-
-
-def is_team_profile_link(team_name: str):
-    profiles_json = "./hltv_scraper/teams_profile.json"
-
-    if not os.path.exists(profiles_json):
-        return False
-
-    with open(profiles_json) as file:
-        profiles = json.load(file)
-        if team_name in profiles:
-            return True
-
-    return False
-
-
-def is_player_profiles(player_name: str):
-    profiles_json = "./hltv_scraper/players_profiles.json"
-
-    if not os.path.exists(profiles_json):
-        return False
-
-    with open(profiles_json) as file:
-        profiles = json.load(file)
-        if player_name in profiles:
-            return True
-
-    return False
