@@ -29,6 +29,13 @@ def is_profile_link(filename: str, profile: str):
     return False
 
 
+def get_profile_data(filename: str, profile: str):
+    profiles_json = f"./hltv_scraper/{filename}.json"
+    with open(profiles_json) as file:
+        profiles = json.load(file)
+        return profiles[profile]
+
+
 def clear_old_data(json_name: str):
     open(f"./hltv_scraper/{json_name}.json", "w").close()
 
@@ -42,17 +49,3 @@ def run_spider(spider_name: str, json_name: str, args: str):
         cwd="./hltv_scraper",
     )
     process.wait()
-
-
-def get_profile_link(team_name: str):
-    profiles_json = "./hltv_scraper/teams_profile.json"
-    with open(profiles_json) as file:
-        profiles = json.load(file)
-        return profiles[team_name]
-
-
-def get_players_profile(player: str):
-    profiles_json = "./hltv_scraper/players_profiles.json"
-    with open(profiles_json) as file:
-        profiles = json.load(file)
-        return profiles[player]
