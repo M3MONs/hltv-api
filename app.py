@@ -4,10 +4,9 @@ from utils import (
     should_run_spider,
     run_spider,
     get_profile_link,
-    is_team_profile_link,
-    is_player_profiles,
     get_players_profile,
     load_json_data,
+    is_profile_link,
 )
 
 app = Flask(__name__)
@@ -74,10 +73,10 @@ def team(name: str):
     spider_name = "hltv_teams_id"
     spider_name2 = "hltv_team"
 
-    if not is_team_profile_link(name):
+    if not is_profile_link("teams_profile", name):
         run_spider(spider_name, name, f"-a team={name}")
 
-    if not is_team_profile_link(name):
+    if not is_profile_link("teams_profile", name):
         return "Team not found!"
 
     profile_link = get_profile_link(name)
@@ -96,10 +95,10 @@ def player(name: str):
     name = name.lower()
     spider_name = "hltv_players_search"
 
-    if not is_player_profiles(name):
+    if not is_profile_link("players_profiles", name):
         run_spider(spider_name, name, f"-a player={name}")
 
-    if not is_player_profiles(name):
+    if not is_profile_link("players_profiles", name):
         return "Player not found!"
 
     profiles = get_players_profile(name)
