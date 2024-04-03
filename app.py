@@ -7,8 +7,8 @@ from utils import (
     is_team_profile_link,
     is_player_profiles,
     get_players_profile,
+    load_json_data,
 )
-import json
 
 app = Flask(__name__)
 
@@ -23,8 +23,7 @@ def results():
     if should_run_spider(json_name):
         run_spider(spider_name, json_name, f"-o {json_name}.json")
 
-    with open(f"./hltv_scraper/{json_name}.json", "r") as file:
-        data = json.load(file)
+    data = load_json_data(json_name)
 
     return jsonify(data)
 
@@ -37,8 +36,7 @@ def big_results():
     if should_run_spider(json_name):
         run_spider(spider_name, json_name, f"-o {json_name}.json")
 
-    with open(f"./hltv_scraper/{json_name}.json", "r") as file:
-        data = json.load(file)
+    data = load_json_data(json_name)
 
     return jsonify(data)
 
@@ -51,8 +49,7 @@ def top30():
     if should_run_spider(json_name):
         run_spider(spider_name, json_name, f"-o {json_name}.json")
 
-    with open(f"./hltv_scraper/{json_name}.json", "r") as file:
-        data = json.load(file)
+    data = load_json_data(json_name)
 
     return jsonify(data)
 
@@ -65,8 +62,7 @@ def upcoming_matches():
     if should_run_spider(json_name):
         run_spider(spider_name, json_name, f"-o {json_name}.json")
 
-    with open(f"./hltv_scraper/{json_name}.json", "r") as file:
-        data = json.load(file)
+    data = load_json_data(json_name)
 
     return jsonify(data)
 
@@ -89,8 +85,7 @@ def team(name: str):
     if should_run_spider(name, 24):
         run_spider(spider_name2, name, f"-a team={profile_link} -o {name}.json")
 
-    with open(f"./hltv_scraper/{name}.json", "r") as file:
-        data = json.load(file)
+    data = load_json_data(name)
 
     return jsonify(data)
 
