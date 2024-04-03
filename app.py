@@ -3,8 +3,7 @@ from flask_limiter import Limiter
 from utils import (
     should_run_spider,
     run_spider,
-    get_profile_link,
-    get_players_profile,
+    get_profile_data,
     load_json_data,
     is_profile_link,
 )
@@ -79,7 +78,7 @@ def team(name: str):
     if not is_profile_link("teams_profile", name):
         return "Team not found!"
 
-    profile_link = get_profile_link(name)
+    profile_link = get_profile_data("teams_profile", name)
 
     if should_run_spider(name, 24):
         run_spider(spider_name2, name, f"-a team={profile_link} -o {name}.json")
@@ -101,7 +100,7 @@ def player(name: str):
     if not is_profile_link("players_profiles", name):
         return "Player not found!"
 
-    profiles = get_players_profile(name)
+    profiles = get_profile_data("players_profiles", name)
 
     return jsonify(profiles)
 
