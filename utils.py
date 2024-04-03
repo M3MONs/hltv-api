@@ -10,6 +10,11 @@ def should_run_spider(json_name: str, hours: int = 1):
     return True
 
 
+def load_json_data(filename: str):
+    with open(f"./hltv_scraper/{filename}.json", "r") as file:
+        return json.load(file)
+
+
 def clear_old_data(json_name: str):
     open(f"./hltv_scraper/{json_name}.json", "w").close()
 
@@ -36,7 +41,6 @@ def get_players_profile(player: str):
     profiles_json = "./hltv_scraper/players_profiles.json"
     with open(profiles_json) as file:
         profiles = json.load(file)
-        print(profiles)
         return profiles[player]
 
 
