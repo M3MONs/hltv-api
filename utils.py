@@ -51,3 +51,9 @@ def run_spider(spider_name: str, json_name: str, args: str) -> None:
         cwd=BASE_DIR,
     )
     process.wait()
+
+
+def run_spider_and_get_data(spider: str, filename: str, spider_args: str) -> dict:
+    if should_run_spider(filename):
+        run_spider(spider, filename, spider_args)
+    return load_json_data(filename)
