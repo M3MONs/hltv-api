@@ -1,3 +1,6 @@
+import json, os
+
+
 def parse_team(result, number):
     return {
         "name": result.css(f"div.team{number} .team::text").get(),
@@ -25,6 +28,24 @@ def parse_match(result):
     }
 
 
+def update_json_data(filename: str, data: dict):
+    file = f"{filename}.json"
+    existing_data = {}
+
+    try:
+        if os.path.exists(file):
+            with open(file, "r") as f:
+                existing_data = json.load(f)
+
+        existing_data.update(data)
+
+        with open(file, "w") as f:
+            json.dump(existing_data, f, indent=4)
+
+    except Exception as e:
+        print(f"An error occurred while updating JSON data: {e}")
+
+
 ## HLTV_UPCOMING_MATCHES ##
 
 
@@ -49,3 +70,12 @@ def parse_upcoming_match(match):
             "team1": parse_upcoming_match_team(match, 1),
             "team2": parse_upcoming_match_team(match, 2),
         }
+
+
+## HLTV_TEAMS_ID ##
+
+
+def parse_team_profile_link(response, team: str):
+    return response.css(
+        f"a[href^='/team/'][href$='/{team.replace('+', '-')}']::attr(href)"
+    ).get()

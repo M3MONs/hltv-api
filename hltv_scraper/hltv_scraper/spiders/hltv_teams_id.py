@@ -1,5 +1,6 @@
-import scrapy, json, os
+import scrapy
 from typing import Any
+from .utils import parse_team_profile_link, update_json_data
 
 
 class HltvTeamsIdSpider(scrapy.Spider):
@@ -11,24 +12,8 @@ class HltvTeamsIdSpider(scrapy.Spider):
         self.team_name = team
         super().__init__(**kwargs)
 
-    def get_profile_link(self, response):
-        return response.css(
-            f"a[href^='/team/'][href$='/{self.team_name.replace('+', '-')}']::attr(href)"
-        ).get()
-
-    def save_to_json(self, data):
-        existing_data = {}
-
-        if os.path.exists("teams_profile.json"):
-            with open("teams_profile.json", "r") as json_file:
-                existing_data = json.load(json_file)
-
-        existing_data.update(data)
-
-        with open("teams_profile.json", "w") as json_file:
-            json.dump(existing_data, json_file, indent=4)
-
     def parse(self, response):
-        profile_link = self.get_profile_link(response)
+        profile_link = parse_team_profile_link(response, self.team_name)
         if profile_link:
-            self.save_to_json({f"{self.team_name}": profile_link})
+            data = {f"{self.team_name}": profile_link}
+            update_json_data("teams_profile", data)
