@@ -23,3 +23,29 @@ def parse_match(result):
         "team1": parse_team(result, 1),
         "team2": parse_team(result, 2),
     }
+
+
+## HLTV_UPCOMING_MATCHES ##
+
+
+def parse_upcoming_match_team(match, number):
+    return {
+        "name": match.css(f"div.team{number} .matchTeamName::text").get(),
+        "logo": match.css(f"div.team{number} img::attr(src)").get(),
+    }
+
+
+def is_team_in_upcoming_match(match):
+    return match.css("div.team1 .matchTeamName::text").get() is not None
+
+
+def parse_upcoming_match(match):
+    print(is_team_in_upcoming_match(match))
+    if is_team_in_upcoming_match(match):
+        return {
+            "hour": match.css("div.matchTime::text").get(),
+            "meta": match.css("div.matchMeta::text").get(),
+            "event": match.css("div.matchEventName::text").get(),
+            "team1": parse_upcoming_match_team(match, 1),
+            "team2": parse_upcoming_match_team(match, 2),
+        }
