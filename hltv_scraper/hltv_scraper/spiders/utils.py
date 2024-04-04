@@ -1,4 +1,4 @@
-import json, os
+import json, os, scrapy
 
 
 def parse_team(result, number):
@@ -120,3 +120,23 @@ def parse_results(sublists):
             parse_match(result) for result in sublist.css("div.result")
         ]
     return all_results
+
+
+## HLTV_PLAYERS_SEARCH
+
+
+def parse_players_profile_link(response, player: str):
+    return response.css(f"a[href^='/player/'][href$='/{player}']").getall()
+
+
+def parse_players_profile(profiles):
+    profiles_data = []
+    for profile in profiles:
+        selector = scrapy.Selector(text=profile)
+        data = {
+            "name": selector.css("a::text").get(),
+            "profile_link": selector.css("a::attr(href)").get(),
+            "img": selector.css("img::attr(src)").get(),
+        }
+        profiles_data.append(data)
+    return profiles_data
