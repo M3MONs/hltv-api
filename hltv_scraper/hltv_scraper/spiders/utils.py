@@ -107,3 +107,16 @@ def parse_team_profile(response):
     }
     if team_data["name"]:
         return team_data
+
+
+## HLTV_RESULTS ##
+
+
+def parse_results(sublists):
+    all_results = {}
+    for sublist in sublists:
+        date = sublist.css(".standard-headline::text").get()
+        all_results[date] = [
+            parse_match(result) for result in sublist.css("div.result")
+        ]
+    return all_results
