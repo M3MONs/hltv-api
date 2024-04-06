@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask, jsonify
 from flask_limiter import Limiter
 from utils import (
@@ -92,6 +93,25 @@ def player(name: str):
     profiles = get_profile_data("players_profiles", name)
 
     return jsonify(profiles)
+
+
+today = datetime.date.today()
+
+
+@app.route("/news", defaults={"year": today.year, "month": today.strftime("%B")})
+@app.route("/news/<year>/<month>")
+@limiter.limit("1 per second")
+def news(year: str, month: str):
+    spider_name = "hltv_news"
+    filename = f"news_{year}_{month}"
+
+    print(should_run_spider(filename))
+
+    data = run_spider_and_get_data(
+        spider_name, filename, f"-a year={year} -a month={month} -o {filename}.json"
+    )
+
+    return jsonify(data)
 
 
 if __name__ == "__main__":
