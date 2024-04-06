@@ -140,3 +140,18 @@ def parse_players_profile(profiles):
         }
         profiles_data.append(data)
     return profiles_data
+
+
+## HLTV_NEWS ##
+
+
+def parse_news(articles):
+    return [
+        {
+            "title": article.css(".newstext::text").get(),
+            "img": article.css("img.newsflag::attr(src)").get(),
+            "date": article.css("div.newsrecent::text").get(),
+            "comments": article.css("div.newstc div:nth-child(2)::text").get(),
+        }
+        for article in articles
+    ]
