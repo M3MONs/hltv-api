@@ -34,12 +34,12 @@ def update_json_data(filename: str, data: dict):
 
     try:
         if os.path.exists(file):
-            with open(file, "r") as f:
+            with open(file, "r", encoding="utf-8") as f:
                 existing_data = json.load(f)
 
         existing_data.update(data)
 
-        with open(file, "w") as f:
+        with open(file, "w", encoding="utf-8") as f:
             json.dump(existing_data, f, indent=4)
 
     except Exception as e:
