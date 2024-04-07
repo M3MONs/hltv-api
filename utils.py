@@ -5,16 +5,29 @@ BASE_DIR = "./hltv_scraper"
 
 def should_run_spider(json_name: str, hours: int = 1) -> bool:
     localization = os.path.join(BASE_DIR, f"{json_name}.json")
-    if os.path.exists(localization) and time.time() - os.path.getmtime(localization) < (
-        3600 * hours
-    ):
-        return False
-    return True
+
+    if not os.path.exists(localization):
+        return True
+
+    if not time.time() - os.path.getmtime(localization) < (3600 * hours):
+        return True
+
+    try:
+        with open(localization, "r") as file:
+            json.load(file)
+    except Exception as e:
+        print(f"Error loading JSON file: {e}")
+        return True
+
+    return False
 
 
 def load_json_data(filename: str) -> dict:
-    with open(f"./hltv_scraper/{filename}.json", "r") as file:
-        return json.load(file)
+    try:
+        with open(f"./hltv_scraper/{filename}.json", "r") as file:
+            return json.load(file)
+    except Exception as e:
+        return f"Error loading JSON file: {e}"
 
 
 def is_profile_link(filename: str, profile: str) -> bool:
