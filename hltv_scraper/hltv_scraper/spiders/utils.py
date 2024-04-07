@@ -155,3 +155,36 @@ def parse_news(articles):
         }
         for article in articles
     ]
+
+
+## HLTV_PLAYER ##
+
+
+def parse_player_stats(stats):
+    return [
+        {
+            f'{stat.css("b::text").get()}': stat.css("span.statsVal p::text").get(),
+        }
+        for stat in stats
+    ]
+
+
+def parse_player_trophies(trophies):
+    return [
+        {
+            "title": trophy.css("span.trophyDescription::attr(title)").get(),
+            "icon": trophy.css("span.trophyDescription img::attr(src)").get(),
+        }
+        for trophy in trophies
+    ]
+
+
+def parse_player_profile(profile):
+    return {
+        "nick": profile.css("h1.playerNickname::text").get(),
+        "name": profile.css("div.playerRealname::text").get(),
+        "flag": profile.css("div.playerRealname img::attr(src)").get(),
+        "team": profile.css('div.playerTeam span[itemprop="text"] ::text').getall(),
+        "stats": parse_player_stats(profile.css("div.player-stat")),
+        "trophies": parse_player_trophies(profile.css(".trophy")),
+    }
