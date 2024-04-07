@@ -114,5 +114,16 @@ def news(year: str, month: str):
     return jsonify(data)
 
 
+@app.route("/profile/player/<id>/<player>")
+@limiter.limit("1 per second")
+def player_profile(id: str, player: str):
+    spider_name = "hltv_player"
+    filename = player
+    data = run_spider_and_get_data(
+        spider_name, filename, f"-a profile=/player/{id}/{player} -o {filename}.json"
+    )
+    return jsonify(data)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
