@@ -55,6 +55,25 @@ def upcoming_matches():
     return jsonify(data)
 
 
+today = datetime.date.today()
+
+
+@app.route("/news", defaults={"year": today.year, "month": today.strftime("%B")})
+@app.route("/news/<year>/<month>")
+@limiter.limit("1 per second")
+def news(year: str, month: str):
+    spider_name = "hltv_news"
+    filename = f"news_{year}_{month}"
+
+    print(should_run_spider(filename))
+
+    data = run_spider_and_get_data(
+        spider_name, filename, f"-a year={year} -a month={month} -o {filename}.json"
+    )
+
+    return jsonify(data)
+
+
 @app.route("/team/<name>", methods=["GET"])
 @limiter.limit("1 per second")
 def team(name: str):
@@ -78,6 +97,14 @@ def team(name: str):
     return jsonify(data)
 
 
+@app.route("/profile/team/<id>/<team>", methods=["GET"])
+@limiter.limit("1 per second")
+def team(id: str, team: str):
+    filename = team
+
+    return f"{id}/{filename}"
+
+
 @app.route("/player/<name>", methods=["GET"])
 @limiter.limit("1 per second")
 def player(name: str):
@@ -95,26 +122,7 @@ def player(name: str):
     return jsonify(profiles)
 
 
-today = datetime.date.today()
-
-
-@app.route("/news", defaults={"year": today.year, "month": today.strftime("%B")})
-@app.route("/news/<year>/<month>")
-@limiter.limit("1 per second")
-def news(year: str, month: str):
-    spider_name = "hltv_news"
-    filename = f"news_{year}_{month}"
-
-    print(should_run_spider(filename))
-
-    data = run_spider_and_get_data(
-        spider_name, filename, f"-a year={year} -a month={month} -o {filename}.json"
-    )
-
-    return jsonify(data)
-
-
-@app.route("/profile/player/<id>/<player>")
+@app.route("/profile/player/<id>/<player>", methods=["GET"])
 @limiter.limit("1 per second")
 def player_profile(id: str, player: str):
     spider_name = "hltv_player"
