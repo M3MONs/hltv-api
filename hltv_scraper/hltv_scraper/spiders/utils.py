@@ -75,10 +75,16 @@ def parse_upcoming_match(match):
 ## HLTV_TEAMS_ID ##
 
 
-def parse_team_profile_link(response, team: str):
-    return response.css(
-        f"a[href^='/team/'][href$='/{team.replace('+', '-')}']::attr(href)"
-    ).get()
+def parse_teams_profile_link(response, team: str):
+    teams = response.css(f"div.search a[href^='/team/']")
+    return [
+        {
+            "name": team.css("a::text").get(),
+            "img": team.css("a img::attr(src)").get(),
+            "link": team.css("a::attr(href)").get(),
+        }
+        for team in teams
+    ]
 
 
 ## HLTV_TEAM ##
