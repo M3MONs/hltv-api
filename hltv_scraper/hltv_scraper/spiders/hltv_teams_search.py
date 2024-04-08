@@ -1,10 +1,10 @@
 import scrapy
 from typing import Any
-from .utils import parse_team_profile_link, update_json_data
+from .utils import update_json_data, parse_teams_profile_link
 
 
-class HltvTeamsIdSpider(scrapy.Spider):
-    name = "hltv_teams_id"
+class HltvTeamsSearchSpider(scrapy.Spider):
+    name = "hltv_teams_search"
     allowed_domains = ["www.hltv.org"]
 
     def __init__(self, team: str, **kwargs: Any):
@@ -13,7 +13,7 @@ class HltvTeamsIdSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def parse(self, response):
-        profile_link = parse_team_profile_link(response, self.team_name)
+        profile_link = parse_teams_profile_link(response, self.team_name)
         if profile_link:
             data = {f"{self.team_name}": profile_link}
             update_json_data("teams_profile", data)
