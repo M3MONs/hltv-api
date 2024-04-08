@@ -78,8 +78,7 @@ def news(year: str, month: str):
 @limiter.limit("1 per second")
 def team(name: str):
     name = name.lower()
-    spider_name = "hltv_teams_id"
-    spider_name2 = "hltv_team"
+    spider_name = "hltv_teams_search"
 
     if not is_profile_link("teams_profile", name):
         run_spider(spider_name, name, f"-a team={name}")
@@ -87,19 +86,14 @@ def team(name: str):
     if not is_profile_link("teams_profile", name):
         return "Team not found!"
 
-    profile_link = get_profile_data("teams_profile", name)
+    profiles = get_profile_data("teams_profile", name)
 
-    if should_run_spider(name, 24):
-        run_spider(spider_name2, name, f"-a team={profile_link} -o {name}.json")
-
-    data = load_json_data(name)
-
-    return jsonify(data)
+    return jsonify(profiles)
 
 
 @app.route("/profile/team/<id>/<team>", methods=["GET"])
 @limiter.limit("1 per second")
-def team(id: str, team: str):
+def team_profile(id: str, team: str):
     filename = team
 
     return f"{id}/{filename}"
