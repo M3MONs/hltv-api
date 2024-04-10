@@ -8,7 +8,7 @@ class HltvTeamSpider(scrapy.Spider):
     allowed_domains = ["www.hltv.org"]
 
     def __init__(self, team: str, **kwargs: Any):
-        self.start_urls = [f"https://www.hltv.org{team}"]
+        self.start_urls = [f"https://www.hltv.org{team}#tab-matchesBox"]
         super().__init__(**kwargs)
 
     def parse(self, response):
