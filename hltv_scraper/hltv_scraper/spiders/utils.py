@@ -102,6 +102,27 @@ def parse_team_squad(response):
     ]
 
 
+def parse_single_team(match, name: int, child: int):
+    return {
+        "name": match.css(f".team-flex :nth-child({name})::text").get(),
+        "logo": match.css(f".team-flex:nth-child({child}) .team-logo::attr(src)").get(),
+        "score": match.css(f".score:nth-child({child})::text").get(),
+    }
+
+
+def parse_team_matches(response):
+    matches = response.css("tr.team-row")
+    return [
+        {
+            "match_link": match.css("td:nth-child(3) a::attr(href)").get(),
+            "date": match.css(".date-cell span::text").get(),
+            "team1": parse_single_team(match, 1, 1),
+            "team2": parse_single_team(match, 2, 3),
+        }
+        for match in matches
+    ]
+
+
 def parse_team_profile(response):
     team_data = {
         "name": response.css(".profile-team-name::text").get(),
@@ -110,6 +131,7 @@ def parse_team_profile(response):
         "country": response.css("div.team-country::text").get(),
         "country_img": f'https://www.hltv.org{response.css("div.team-country img::attr(src)").get()}',
         "squad": parse_team_squad(response),
+        "matches": parse_team_matches(response),
     }
     if team_data["name"]:
         return team_data
