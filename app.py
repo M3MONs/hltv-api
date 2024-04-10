@@ -6,11 +6,11 @@ from utils import (
     run_spider,
     run_spider_and_get_data,
     get_profile_data,
-    load_json_data,
     is_profile_link,
 )
 
 app = Flask(__name__)
+app.json.sort_keys = False
 
 limiter = Limiter(app, default_limits=["1 per second"])
 
