@@ -133,5 +133,18 @@ def player_profile(id: str, player: str):
     return jsonify(data)
 
 
+@app.route("/match/<id>/<match>", methods=["GET"])
+def match(id: str, match: str):
+    spider_name = "hltv_match"
+    match_link = f"{id}/{match}"
+    filename = f"{id}_{match}"
+
+    data = run_spider_and_get_data(
+        spider_name, filename, f"-a match={match_link} -o {filename}.json"
+    )
+
+    return jsonify(data)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
