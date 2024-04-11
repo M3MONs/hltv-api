@@ -133,5 +133,10 @@ def player_profile(id: str, player: str):
     return jsonify(data)
 
 
+@app.route("/match/<id>/<match>", methods=["GET"])
+def match(id: str, match: str):
+    return f"{id}/{match}"
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
