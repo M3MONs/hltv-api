@@ -216,3 +216,26 @@ def parse_player_profile(profile):
         "stats": parse_player_stats(profile.css("div.player-stat")),
         "trophies": parse_player_trophies(profile.css(".trophy")),
     }
+
+
+## HLTV_MATCH ##
+
+
+def parse_match_team(teams_box, number: int):
+    return {
+        "name": teams_box.css(f"div.team{number}-gradient .teamName::text").get(),
+        "logo": teams_box.css(f"div.team{number}-gradient img::attr(src)").get(),
+        "score": teams_box.css(
+            f".team{number}-gradient > div:nth-child(2)::text"
+        ).get(),
+    }
+
+
+def parse_match_teams_box(teams_box):
+    return {
+        "date": teams_box.css("div.date::text").get(),
+        "hour": teams_box.css("div.time::text").get(),
+        "event": teams_box.css("div.event ::text").get(),
+        "team1": parse_match_team(teams_box, 1),
+        "team2": parse_match_team(teams_box, 2),
+    }

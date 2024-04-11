@@ -1,5 +1,6 @@
 from typing import Any
 import scrapy
+from .utils import parse_match_teams_box
 
 
 class HltvMatchSpider(scrapy.Spider):
@@ -11,4 +12,6 @@ class HltvMatchSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def parse(self, response):
-        pass
+        teams_box = parse_match_teams_box(response.css(".teamsBox"))
+
+        yield teams_box
