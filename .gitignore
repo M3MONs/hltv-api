@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 hltv_scraper/*.json
+hltv_scraper/*/*.json
