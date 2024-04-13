@@ -63,7 +63,7 @@ today = datetime.date.today()
 @limiter.limit("1 per second")
 def news(year: str, month: str):
     spider_name = "hltv_news"
-    filename = f"news_{year}_{month}"
+    filename = f"news/news_{year}_{month}"
 
     print(should_run_spider(filename))
 
@@ -95,7 +95,7 @@ def team(name: str):
 @limiter.limit("1 per second")
 def team_profile(id: str, team: str):
     spider_name = "hltv_team"
-    filename = team
+    filename = f"team/{team}"
 
     data = run_spider_and_get_data(
         spider_name, filename, f"-a team=/team/{id}/{team} -o {filename}.json"
@@ -125,7 +125,7 @@ def player(name: str):
 @limiter.limit("1 per second")
 def player_profile(id: str, player: str):
     spider_name = "hltv_player"
-    filename = player
+    filename = f"player/{player}"
 
     data = run_spider_and_get_data(
         spider_name, filename, f"-a profile=/player/{id}/{player} -o {filename}.json"
@@ -137,7 +137,7 @@ def player_profile(id: str, player: str):
 def match(id: str, match: str):
     spider_name = "hltv_match"
     match_link = f"{id}/{match}"
-    filename = f"{id}_{match}"
+    filename = f"match/{id}_{match}"
 
     data = run_spider_and_get_data(
         spider_name, filename, f"-a match={match_link} -o {filename}.json"
