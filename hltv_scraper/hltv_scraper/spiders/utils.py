@@ -256,3 +256,31 @@ def parse_map_holders(response):
         }
         for map in map_holders
     ]
+
+
+def parse_players_stats(players):
+    return [
+        {
+            "img": player.css(".flag.flag::attr(src)").get(),
+            "name": " ".join(
+                player.css(".gtSmartphone-only.statsPlayerName ::text").getall()
+            ),
+            "kd": player.css(".kd::text").get(),
+            "+/-": player.css(".plus-minus ::text").get(),
+            "adr": player.css(".adr::text").get(),
+            "kast": player.css(".kast::text").get(),
+            "rating 2.0": player.css(".rating::text").get(),
+        }
+        for player in players
+    ]
+
+
+def parse_table_stats(response):
+    table_stats = response.css(".table.totalstats")
+    return [
+        {
+            "team": table.css(".teamName.team::text").get(),
+            "stats": parse_players_stats(table.css("tr[class]:not(.header-row)")),
+        }
+        for table in table_stats
+    ]
