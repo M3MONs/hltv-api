@@ -239,3 +239,48 @@ def parse_match_teams_box(teams_box):
         "team1": parse_match_team(teams_box, 1),
         "team2": parse_match_team(teams_box, 2),
     }
+
+
+def parse_map_holders(response):
+    map_holders = response.css(".match-page .mapholder")
+    team1 = map_holders.css(".results-left .results-teamname::text").get()
+    team2 = map_holders.css(".results-right .results-teamname::text").get()
+    return [
+        {
+            "map_img": map.css(".map-name-holder img::attr(src)").get(),
+            "map_name": map.css(".map-name-holder .mapname::text").get(),
+            "score": {
+                f"{team1}": map.css(".results-left .results-team-score::text").get(),
+                f"{team2}": map.css(".results-right .results-team-score::text").get(),
+            },
+        }
+        for map in map_holders
+    ]
+
+
+def parse_players_stats(players):
+    return [
+        {
+            "img": player.css(".flag.flag::attr(src)").get(),
+            "name": " ".join(
+                player.css(".gtSmartphone-only.statsPlayerName ::text").getall()
+            ),
+            "kd": player.css(".kd::text").get(),
+            "+/-": player.css(".plus-minus ::text").get(),
+            "adr": player.css(".adr::text").get(),
+            "kast": player.css(".kast::text").get(),
+            "rating 2.0": player.css(".rating::text").get(),
+        }
+        for player in players
+    ]
+
+
+def parse_table_stats(response):
+    table_stats = response.css(".table.totalstats")
+    return [
+        {
+            "team": table.css(".teamName.team::text").get(),
+            "stats": parse_players_stats(table.css("tr[class]:not(.header-row)")),
+        }
+        for table in table_stats
+    ]
