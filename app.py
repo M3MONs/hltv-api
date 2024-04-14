@@ -91,6 +91,19 @@ def team(name: str):
     return jsonify(profiles)
 
 
+@app.route("/team/matches/<id>", methods=["GET"])
+@limiter.limit("1 per second")
+def team_matches(id: str):
+    spider_name = "hltv_team_matches"
+    filename = f"team_matches/{id}"
+
+    data = run_spider_and_get_data(
+        spider_name, filename, f"-a id={id} -o {filename}.json"
+    )
+
+    return data
+
+
 @app.route("/profile/team/<id>/<team>", methods=["GET"])
 @limiter.limit("1 per second")
 def team_profile(id: str, team: str):
