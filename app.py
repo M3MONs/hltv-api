@@ -91,6 +91,12 @@ def team(name: str):
     return jsonify(profiles)
 
 
+@app.route("/team/matches/<id>", methods=["GET"])
+@limiter.limit("1 per second")
+def team_matches(id: str):
+    return id
+
+
 @app.route("/profile/team/<id>/<team>", methods=["GET"])
 @limiter.limit("1 per second")
 def team_profile(id: str, team: str):
