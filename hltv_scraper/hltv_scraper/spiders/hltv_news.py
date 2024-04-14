@@ -18,4 +18,4 @@ class HltvNewsSpider(scrapy.Spider):
     def parse(self, response):
         articles = response.css(".article")
         data = parse_news(articles)
-        yield {"news": data}
+        yield from data
