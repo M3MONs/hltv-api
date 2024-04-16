@@ -15,12 +15,15 @@ app.json.sort_keys = False
 limiter = Limiter(app, default_limits=["1 per second"])
 
 
-@app.route("/results", methods=["GET"])
-def results():
+@app.route("/results", defaults={"offset": 0})
+@app.route("/results/<offset>", methods=["GET"])
+def results(offset: int):
     spider_name = "hltv_results"
-    json_name = "results"
+    json_name = f"results/results_{offset}"
 
-    data = run_spider_and_get_data(spider_name, json_name, f"-o {json_name}.json")
+    data = run_spider_and_get_data(
+        spider_name, json_name, f"-a offset={offset} -o {json_name}.json"
+    )
 
     return jsonify(data)
 
@@ -91,14 +94,15 @@ def team(name: str):
     return jsonify(profiles)
 
 
-@app.route("/team/matches/<id>", methods=["GET"])
+@app.route("/team/matches/<id>", defaults={"offset": 0})
+@app.route("/team/matches/<id>/<offset>", methods=["GET"])
 @limiter.limit("1 per second")
-def team_matches(id: str):
+def team_matches(id: str, offset: int):
     spider_name = "hltv_team_matches"
-    filename = f"team_matches/{id}"
+    filename = f"team_matches/{id}_{offset}"
 
     data = run_spider_and_get_data(
-        spider_name, filename, f"-a id={id} -o {filename}.json"
+        spider_name, filename, f"-a id={id} -a offset={offset} -o {filename}.json"
     )
 
     return data
