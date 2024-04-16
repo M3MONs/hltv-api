@@ -21,6 +21,7 @@ def parse_team_ranking(team):
 
 def parse_match(result):
     return {
+        "link": result.css("a.a-reset::attr(href)").get(),
         "map": result.css("div.map-text::text").get(),
         "event": result.css("span.event-name::text").get(),
         "team1": parse_team(result, 1),
@@ -144,9 +145,7 @@ def parse_results(sublists):
     all_results = {}
     for sublist in sublists:
         date = sublist.css(".standard-headline::text").get()
-        all_results[date] = [
-            parse_match(result) for result in sublist.css("div.result")
-        ]
+        all_results[date] = [parse_match(result) for result in sublist.css("a.a-reset")]
     return all_results
 
 
