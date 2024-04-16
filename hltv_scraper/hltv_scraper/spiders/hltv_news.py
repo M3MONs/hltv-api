@@ -1,9 +1,6 @@
 from typing import Any
 import scrapy
-import datetime
 from .utils import parse_news
-
-today = datetime.date.today()
 
 
 class HltvNewsSpider(scrapy.Spider):
