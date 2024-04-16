@@ -15,12 +15,15 @@ app.json.sort_keys = False
 limiter = Limiter(app, default_limits=["1 per second"])
 
 
-@app.route("/results", methods=["GET"])
-def results():
+@app.route("/results", defaults={"offset": 0})
+@app.route("/results/<offset>", methods=["GET"])
+def results(offset: int):
     spider_name = "hltv_results"
-    json_name = "results"
+    json_name = f"results/results_{offset}"
 
-    data = run_spider_and_get_data(spider_name, json_name, f"-o {json_name}.json")
+    data = run_spider_and_get_data(
+        spider_name, json_name, f"-a offset={offset} -o {json_name}.json"
+    )
 
     return jsonify(data)
 
