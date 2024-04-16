@@ -302,6 +302,7 @@ def parse_team_results(results):
             "event": result.css(".event-name::text").get(),
             "score": result.css(".result-score ::text").getall(),
             "map": results.css(".map.map-text::text").get(),
+            "link": result.css("a.a-reset::attr(href)").get(),
         }
         for result in results
     ]

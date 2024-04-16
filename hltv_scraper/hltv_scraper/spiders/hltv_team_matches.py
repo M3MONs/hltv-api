@@ -12,6 +12,6 @@ class HltvTeamMatchesSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def parse(self, response):
-        results = response.css(".results-all .result")
+        results = response.css(".results-all .a-reset")
         data = parse_team_results(results)
         yield from data
