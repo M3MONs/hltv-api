@@ -14,7 +14,9 @@ def should_run_spider(json_name: str, hours: int = 1) -> bool:
 
     try:
         with open(localization, "r") as file:
-            json.load(file)
+            file_data = json.load(file)
+            if file_data == []:
+                return True
     except Exception as e:
         print(f"Error loading JSON file: {e}")
         return True
