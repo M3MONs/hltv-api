@@ -2,7 +2,6 @@ import datetime
 from flask import Flask, jsonify
 from flask_limiter import Limiter
 from utils import (
-    should_run_spider,
     run_spider,
     run_spider_and_get_data,
     get_profile_data,
@@ -67,8 +66,6 @@ today = datetime.date.today()
 def news(year: str, month: str):
     spider_name = "hltv_news"
     filename = f"news/news_{year}_{month}"
-
-    print(should_run_spider(filename))
 
     data = run_spider_and_get_data(
         spider_name, filename, f"-a year={year} -a month={month} -o {filename}.json"
