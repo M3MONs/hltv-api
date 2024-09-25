@@ -1,8 +1,13 @@
-import os, time, subprocess, json
+import os, subprocess, json
 
-from classes.data import JsonDataLoader as JDL
-from classes.path_generator import JsonFilePathGenerator as JFG
-from classes.cleaner import JsonOldDataCleaner
+from classes import (
+    JsonDataLoader as JDL,
+    JsonFilePathGenerator as JFG,
+    JsonOldDataCleaner as JODC,
+    FileTimeCondition,
+    JsonFileEmptyCondition,
+    SpiderRunChecker,
+)
 
 BASE_DIR = "./hltv_scraper"
 json_path = JFG(BASE_DIR)
@@ -11,22 +16,11 @@ json_path = JFG(BASE_DIR)
 def should_run_spider(json_name: str, hours: int = 1) -> bool:
     localization = json_path.generate(json_name)
 
-    if not os.path.exists(localization):
-        return True
+    conditions = [FileTimeCondition(), JsonFileEmptyCondition()]
 
-    if not time.time() - os.path.getmtime(localization) < (3600 * hours):
-        return True
+    spider_checker = SpiderRunChecker(conditions)
 
-    try:
-        with open(localization, "r") as file:
-            file_data = json.load(file)
-            if file_data == []:
-                return True
-    except Exception as e:
-        print(f"Error loading JSON file: {e}")
-        return True
-
-    return False
+    return spider_checker.should_run_spider(localization, hours)
 
 
 def is_profile_link(filename: str, profile: str) -> bool:
@@ -53,7 +47,7 @@ def get_profile_data(filename: str, profile: str) -> dict:
 def run_spider(spider_name: str, json_name: str, args: str) -> None:
     path = json_path.generate(json_name)
     if os.path.exists(path):
-        JsonOldDataCleaner.clean(path)
+        JODC.clean(path)
 
     process = subprocess.Popen(
         ["scrapy", "crawl", spider_name] + args.split(),
