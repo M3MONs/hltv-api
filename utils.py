@@ -1,11 +1,10 @@
-import subprocess
-
 from classes import (
     JsonDataLoader as JDL,
     JsonFilePathGenerator as JFG,
     JsonOldDataCleaner as JODC,
     ConditionsChecker,
     ConditionFactory as CF,
+    SpiderProcess
 )
 
 BASE_DIR = "./hltv_scraper"
@@ -43,12 +42,8 @@ def run_spider(spider_name: str, json_name: str, args: str) -> None:
     
     if CF.get("file_exists").check(path):
         JODC.clean(path)
-
-    process = subprocess.Popen(
-        ["scrapy", "crawl", spider_name] + args.split(),
-        cwd=BASE_DIR,
-    )
-    process.wait()
+        
+    SpiderProcess().execute(spider_name, BASE_DIR, args)
 
 
 def run_spider_and_get_data(spider: str, filename: str, spider_args: str) -> dict:
