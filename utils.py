@@ -1,4 +1,4 @@
-import os, subprocess, json
+import subprocess
 
 from classes import (
     JsonDataLoader as JDL,
@@ -15,7 +15,7 @@ json_path = JFG(BASE_DIR)
 def should_run_spider(json_name: str, hours: int = 1) -> bool:
     localization = json_path.generate(json_name)
 
-    conditions = [CF().get("file_time"), CF().get("json_file_empty")]
+    conditions = [CF.get("file_time"), CF.get("json_file_empty")]
     checker = ConditionsChecker(conditions)
 
     return checker.check(localization, hours)
@@ -24,27 +24,24 @@ def should_run_spider(json_name: str, hours: int = 1) -> bool:
 def is_profile_link(filename: str, profile: str) -> bool:
     file = json_path.generate(filename)
 
-    if not os.path.exists(file):
+    if not CF.get("file_exists").check(file):
         return False
-
-    with open(file) as f:
-        profiles = json.load(f)
-        if profile in profiles:
-            return True
-
-    return False
+    
+    profiles = JDL().load(file)
+    
+    return profile in profiles
 
 
 def get_profile_data(filename: str, profile: str) -> dict:
     file = json_path.generate(filename)
-    with open(file) as f:
-        profiles = json.load(f)
-        return profiles[profile]
+    profiles = JDL().load(file)
+    return profiles[profile]
 
 
 def run_spider(spider_name: str, json_name: str, args: str) -> None:
     path = json_path.generate(json_name)
-    if os.path.exists(path):
+    
+    if CF.get("file_exists").check(path):
         JODC.clean(path)
 
     process = subprocess.Popen(
