@@ -1,8 +1,8 @@
-from .spider_run_condition import FileTimeCondition, JsonFileEmptyCondition
+from .conditions import Condition, FileTimeCondition, JsonFileEmptyCondition
 
 class ConditionFactory:
     @staticmethod
-    def get(condition_type):
+    def get(condition_type) -> Condition:
         if condition_type == 'file_time':
             return FileTimeCondition()
         elif condition_type == 'json_file_empty':
