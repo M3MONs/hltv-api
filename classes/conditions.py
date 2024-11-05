@@ -1,24 +1,25 @@
 import os
 import time
 import json
-from typing import Protocol
+from abc import ABC, abstractmethod
 
 
-class SpiderRunCondition(Protocol):
-    def should_run(self, file_path: str, hours: int) -> bool:
+class Condition(ABC):
+    @abstractmethod
+    def check(self, file_path: str, hours: int) -> bool:
         pass
 
 
-class FileTimeCondition(SpiderRunCondition):
-    def should_run(self, file_path: str, hours: int) -> bool:
+class FileTimeCondition(Condition):
+    def check(self, file_path: str, hours: int) -> bool:
         if not os.path.exists(file_path):
             return True
         file_age_in_seconds = time.time() - os.path.getmtime(file_path)
         return file_age_in_seconds > (3600 * hours)
 
 
-class JsonFileEmptyCondition(SpiderRunCondition):
-    def should_run(self, file_path: str, hours: int) -> bool:
+class JsonFileEmptyCondition(Condition):
+    def check(self, file_path: str, hours: int) -> bool:
         if not os.path.exists(file_path):
             return True
 
