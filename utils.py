@@ -4,7 +4,7 @@ from classes import (
     JsonDataLoader as JDL,
     JsonFilePathGenerator as JFG,
     JsonOldDataCleaner as JODC,
-    SpiderRunChecker,
+    ConditionsChecker,
     ConditionFactory as CF,
 )
 
@@ -16,10 +16,9 @@ def should_run_spider(json_name: str, hours: int = 1) -> bool:
     localization = json_path.generate(json_name)
 
     conditions = [CF().get("file_time"), CF().get("json_file_empty")]
+    checker = ConditionsChecker(conditions)
 
-    spider_checker = SpiderRunChecker(conditions)
-
-    return spider_checker.should_run_spider(localization, hours)
+    return checker.check(localization, hours)
 
 
 def is_profile_link(filename: str, profile: str) -> bool:
