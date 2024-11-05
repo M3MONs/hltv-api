@@ -4,9 +4,8 @@ from classes import (
     JsonDataLoader as JDL,
     JsonFilePathGenerator as JFG,
     JsonOldDataCleaner as JODC,
-    FileTimeCondition,
-    JsonFileEmptyCondition,
     SpiderRunChecker,
+    ConditionFactory as CF,
 )
 
 BASE_DIR = "./hltv_scraper"
@@ -16,7 +15,7 @@ json_path = JFG(BASE_DIR)
 def should_run_spider(json_name: str, hours: int = 1) -> bool:
     localization = json_path.generate(json_name)
 
-    conditions = [FileTimeCondition(), JsonFileEmptyCondition()]
+    conditions = [CF().get("file_time"), CF().get("json_file_empty")]
 
     spider_checker = SpiderRunChecker(conditions)
 
