@@ -1,7 +1,17 @@
 from .spider_run_condition import SpiderRunCondition
+from abc import ABC, abstractmethod
 
 
-class SpiderRunChecker:
+class RunChecker(ABC):
+    @abstractmethod
+    def __init__(self, conditions: list[SpiderRunCondition]):
+        pass
+    
+    @abstractmethod
+    def should_run_spider(self, file_path: str, hours: int = 1) -> bool:
+        pass
+
+class SpiderRunChecker(RunChecker):
     def __init__(self, conditions: list[SpiderRunCondition]):
         self.conditions = conditions
 
