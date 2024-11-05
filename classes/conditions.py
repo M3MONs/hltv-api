@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 
 class Condition(ABC):
     @abstractmethod
-    def check(self, file_path: str, hours: int) -> bool:
+    def check(self) -> bool:
         pass
 
 
@@ -30,3 +30,7 @@ class JsonFileEmptyCondition(Condition):
         except Exception as e:
             print(f"Error loading JSON file: {e}")
             return True
+        
+class FileExistsCondition(Condition):
+    def check(self, file_path: str) -> bool:
+        return os.path.exists(file_path)
