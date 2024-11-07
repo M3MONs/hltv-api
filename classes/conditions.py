@@ -6,25 +6,36 @@ from abc import ABC, abstractmethod
 
 class Condition(ABC):
     @abstractmethod
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+    
+    @abstractmethod
     def check(self) -> bool:
         pass
 
-
+# Check if a file is older than a certain number of hours
 class FileTimeCondition(Condition):
-    def check(self, file_path: str, hours: int) -> bool:
-        if not os.path.exists(file_path):
+    def __init__(self, file_path: str, hours: int = 1) -> None:
+        self.file_path = file_path
+        self.hours = hours
+    
+    def check(self) -> bool:
+        if not os.path.exists(self.file_path):
             return True
-        file_age_in_seconds = time.time() - os.path.getmtime(file_path)
-        return file_age_in_seconds > (3600 * hours)
+        file_age_in_seconds = time.time() - os.path.getmtime(self.file_path)
+        return file_age_in_seconds > (3600 * self.hours)
 
 
 class JsonFileEmptyCondition(Condition):
-    def check(self, file_path: str, hours: int) -> bool:
-        if not os.path.exists(file_path):
+    def __init__(self, file_path: str) -> None:
+        self.file_path = file_path
+        
+    def check(self) -> bool:
+        if not os.path.exists(self.file_path):
             return True
 
         try:
-            with open(file_path, "r") as file:
+            with open(self.file_path, "r") as file:
                 file_data = json.load(file)
                 return file_data == []
         except Exception as e:
@@ -32,5 +43,8 @@ class JsonFileEmptyCondition(Condition):
             return True
         
 class FileExistsCondition(Condition):
-    def check(self, file_path: str) -> bool:
-        return os.path.exists(file_path)
+    def __init__(self, file_path:str) -> None:
+        self.file_path = file_path
+        
+    def check(self) -> bool:
+        return os.path.exists(self.file_path)
