@@ -2,12 +2,12 @@ from .conditions import Condition, FileTimeCondition, JsonFileEmptyCondition, Fi
 
 class ConditionFactory:
     @staticmethod
-    def get(condition_type) -> Condition:
+    def get(condition_type, *args, **kwargs) -> Condition:
         if condition_type == 'file_time':
-            return FileTimeCondition()
+            return FileTimeCondition(*args, **kwargs)
         elif condition_type == 'json_file_empty':
-            return JsonFileEmptyCondition()
+            return JsonFileEmptyCondition(*args, **kwargs)
         elif condition_type == 'file_exists':
-            return FileExistsCondition()
+            return FileExistsCondition(*args, **kwargs)
         else:
             raise ValueError(f"Unknown condition type: {condition_type}")
