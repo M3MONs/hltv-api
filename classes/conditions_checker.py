@@ -4,19 +4,21 @@ from abc import ABC, abstractmethod
 
 class Checker(ABC):
     @abstractmethod
-    def __init__(self, conditions: list[Condition]):
+    def __init__(self, *args, **kwargs) -> None:
         pass
     
     @abstractmethod
-    def check(self, file_path: str, hours: int = 1) -> bool:
+    def check(self) -> bool:
         pass
 
-class ConditionsChecker(Checker):
+# Check if any of the conditions are met
+class AnyConditionsChecker(Checker):
     def __init__(self, conditions: list[Condition]):
         self.conditions = conditions
 
-    def check(self, file_path: str, hours: int = 1) -> bool:
+    def check(self) -> bool:
         for condition in self.conditions:
-            if condition.check(file_path, hours):
+            print(f"Checking condition: {condition} -> {condition.check()}")
+            if condition.check():
                 return True
         return False
