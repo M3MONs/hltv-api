@@ -1,6 +1,6 @@
-from typing import Any
 import scrapy
-from .utils import parse_news
+from typing import Any
+from .parsers import ParsersFactory as PF
 
 
 class HltvNewsSpider(scrapy.Spider):
@@ -14,5 +14,5 @@ class HltvNewsSpider(scrapy.Spider):
 
     def parse(self, response):
         articles = response.css(".article")
-        data = parse_news(articles)
+        data = PF.get_parser("news").parse(articles)
         yield from data
