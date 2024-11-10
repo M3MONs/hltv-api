@@ -1,6 +1,6 @@
 from typing import Any
 import scrapy
-from .utils import parse_results
+from .parsers import ParsersFactory as PF
 
 
 class HltvResultsSpider(scrapy.Spider):
@@ -13,4 +13,4 @@ class HltvResultsSpider(scrapy.Spider):
 
     def parse(self, response):
         sublists = response.css("div.allres .results-sublist")
-        yield parse_results(sublists)
+        yield PF.get_parser("results").parse(sublists)
