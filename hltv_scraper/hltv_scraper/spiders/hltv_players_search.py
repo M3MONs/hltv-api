@@ -1,6 +1,7 @@
 from typing import Any
 import scrapy
-from .utils import update_json_data, parse_players_profile_link, parse_players_profile
+from .parsers import ParsersFactory as PF
+from .utils import update_json_data
 
 
 class HltvPlayersSearchSpider(scrapy.Spider):
@@ -13,12 +14,12 @@ class HltvPlayersSearchSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def parse(self, response):
-        profiles = parse_players_profile_link(response, self.player_search)
+        profiles = PF.get_parser("player_profile_link").parse(response, self.player_search)
 
         if not profiles:
             return
 
-        extracted_profiles = parse_players_profile(profiles)
+        extracted_profiles = PF.get_parser("players_profile").parse(profiles)
 
         if extracted_profiles:
             data = {f"{self.player_search}": extracted_profiles}

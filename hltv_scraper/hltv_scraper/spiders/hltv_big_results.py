@@ -1,4 +1,5 @@
 import scrapy
+from .parsers import ParsersFactory as PF
 from .utils import parse_match
 
 
@@ -11,7 +12,7 @@ class HltvBigResultsSpider(scrapy.Spider):
         results = response.css("div.big-results .result-con")
 
         for result in results:
-            data = parse_match(result)
+            data = PF.get_parser("match").parse(result)
 
             # print(data)
             yield data

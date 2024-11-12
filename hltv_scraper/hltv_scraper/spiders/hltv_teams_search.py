@@ -1,6 +1,7 @@
 import scrapy
 from typing import Any
-from .utils import update_json_data, parse_teams_profile_link
+from .parsers import ParsersFactory as PF
+from .utils import update_json_data
 
 
 class HltvTeamsSearchSpider(scrapy.Spider):
@@ -13,7 +14,7 @@ class HltvTeamsSearchSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def parse(self, response):
-        profile_link = parse_teams_profile_link(response, self.team_name)
+        profile_link = PF.get_parser("teams_profile_link").parse(response)
         if profile_link:
             data = {f"{self.team_name}": profile_link}
             update_json_data("teams_profile", data)

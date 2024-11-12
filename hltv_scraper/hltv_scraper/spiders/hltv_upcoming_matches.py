@@ -1,5 +1,5 @@
 import scrapy
-from .utils import parse_upcoming_match
+from .parsers import ParsersFactory as PF
 
 
 class HltvUpcomingMatchesSpider(scrapy.Spider):
@@ -15,7 +15,7 @@ class HltvUpcomingMatchesSpider(scrapy.Spider):
             date = section.css(".matchDayHeadline::text").get()
 
             all_matches[date] = [
-                parse_upcoming_match(match)
+                PF.get_parser("upcoming_match").parse(match)
                 for match in section.css("div.upcomingMatch")
             ]
 

@@ -1,6 +1,6 @@
 from typing import Any
 import scrapy
-from .utils import parse_team_results
+from .parsers import ParsersFactory as PF
 
 
 class HltvTeamMatchesSpider(scrapy.Spider):
@@ -13,5 +13,5 @@ class HltvTeamMatchesSpider(scrapy.Spider):
 
     def parse(self, response):
         results = response.css(".results-all .a-reset")
-        data = parse_team_results(results)
+        data = PF.get_parser("team_results").parse(results)
         yield from data

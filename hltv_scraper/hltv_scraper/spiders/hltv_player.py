@@ -1,6 +1,6 @@
-from typing import Any
 import scrapy
-from .utils import parse_player_profile
+from typing import Any
+from .parsers import ParsersFactory as PF
 
 
 class HltvPlayerSpider(scrapy.Spider):
@@ -13,5 +13,5 @@ class HltvPlayerSpider(scrapy.Spider):
 
     def parse(self, response):
         profile = response.css("div.playerProfile")
-        data = parse_player_profile(profile)
+        data = PF.get_parser('player_profile').parse(profile)
         yield data

@@ -1,5 +1,5 @@
 import scrapy
-from .utils import parse_team_ranking
+from .parsers import ParsersFactory as PF
 
 
 class HltvTop30Spider(scrapy.Spider):
@@ -11,6 +11,6 @@ class HltvTop30Spider(scrapy.Spider):
         ranked_teams = response.css("div.ranked-team.standard-box")
 
         for team in ranked_teams:
-            data = parse_team_ranking(team)
+            data = PF.get_parser("team_ranking").parse(team)
             # print(data)
             yield data
