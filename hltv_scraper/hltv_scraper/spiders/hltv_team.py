@@ -1,6 +1,6 @@
 from typing import Any
 import scrapy
-from .utils import parse_team_profile
+from .parsers import ParsersFactory as PF
 
 
 class HltvTeamSpider(scrapy.Spider):
@@ -12,4 +12,4 @@ class HltvTeamSpider(scrapy.Spider):
         super().__init__(**kwargs)
 
     def parse(self, response):
-        yield parse_team_profile(response)
+        yield PF.get_parser("team_profile").parse(response)
